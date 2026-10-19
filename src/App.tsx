@@ -113,7 +113,7 @@ const MainLayout: React.FC = () => {
       />
 
       {/* Main Content Viewport */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 pb-24 lg:pb-8">
         {/* Render active view based on state and role */}
         {activeView === 'dashboard' && (
           <ParentDashboardView
@@ -184,7 +184,7 @@ const MainLayout: React.FC = () => {
       </main>
 
       {/* Institutional Footer */}
-      <footer className="bg-white border-t border-slate-200 mt-12 py-8 text-xs text-slate-500">
+      <footer className="bg-white border-t border-slate-200 mt-12 py-8 mb-14 lg:mb-0 text-xs text-slate-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full border border-amber-400 p-0.5">

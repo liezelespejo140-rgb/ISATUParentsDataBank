@@ -168,9 +168,9 @@ export const ChildScheduleSection: React.FC<ChildScheduleSectionProps> = ({
       </div>
 
       {/* View Switcher Tabs & Academic Totals Bar */}
-      <div className="px-5 py-3 bg-slate-50 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+      <div className="px-4 sm:px-5 py-3 bg-slate-50 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
         {/* View Tabs */}
-        <div className="flex items-center gap-1.5 bg-slate-200/70 p-1 rounded-xl">
+        <div className="flex items-center gap-1.5 bg-slate-200/70 p-1 rounded-xl overflow-x-auto scrollbar-none max-w-full">
           <button
             onClick={() => setActiveTab('day')}
             className={`px-3 py-1.5 rounded-lg font-semibold transition-all flex items-center gap-1.5 ${
@@ -497,86 +497,165 @@ export const ChildScheduleSection: React.FC<ChildScheduleSectionProps> = ({
 
         {/* TAB 3: SUBJECT & FACULTY DIRECTORY MATRIX */}
         {activeTab === 'list' && (
-          <div className="overflow-x-auto border border-slate-200 rounded-xl">
-            <table className="w-full text-left text-xs border-collapse min-w-[850px]">
-              <thead>
-                <tr className="bg-slate-100 border-b border-slate-200 text-slate-700 font-bold uppercase text-[10px]">
-                  <th className="p-3">Course Code</th>
-                  <th className="p-3">Course Description</th>
-                  <th className="p-3">Schedule & Room</th>
-                  <th className="p-3">Faculty / Instructor Teaching Subject</th>
-                  <th className="p-3 text-center">Units</th>
-                  <th className="p-3 text-center">Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-200">
-                {schedule.map((item) => (
-                  <tr key={item.id} className="hover:bg-slate-50 transition-colors">
-                    <td className="p-3 font-mono font-bold text-blue-900 whitespace-nowrap">
-                      {item.subjectCode}
-                    </td>
-                    <td className="p-3 font-semibold text-slate-900">
-                      <div>{item.subjectTitle}</div>
-                      <span className={`text-[9px] font-bold px-1.5 py-0.2 rounded-full border mt-1 inline-block ${getTypeBadge(item.type)}`}>
-                        {item.type}
+          <div className="space-y-4">
+            {/* Mobile Cards View (Visible on phones & tablets < md) */}
+            <div className="md:hidden space-y-3">
+              {schedule.map((item) => (
+                <div
+                  key={item.id}
+                  className="p-4 bg-white rounded-xl border border-slate-200 shadow-xs space-y-3"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono font-bold text-blue-900 text-sm">
+                          {item.subjectCode}
+                        </span>
+                        <span className={`text-[9px] font-bold px-1.5 py-0.2 rounded-full border ${getTypeBadge(item.type)}`}>
+                          {item.type}
+                        </span>
+                      </div>
+                      <h4 className="font-bold text-slate-900 text-xs mt-1 leading-snug">
+                        {item.subjectTitle}
+                      </h4>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <span className="text-xs font-bold text-slate-900 font-mono bg-slate-100 px-2 py-0.5 rounded">
+                        {item.units.toFixed(1)} Units
                       </span>
-                    </td>
-                    <td className="p-3 whitespace-nowrap">
-                      <div className="font-semibold text-slate-800">
-                        {item.days.map((d) => d.slice(0, 3)).join('/')} {item.startTime} – {item.endTime}
-                      </div>
-                      <div className="text-[10px] text-slate-600 flex items-center gap-1 mt-0.5">
-                        <MapPin className="w-3 h-3 text-amber-600 shrink-0" />
-                        <span>{item.room}</span>
-                        {item.building && <span className="text-slate-400">· {item.building}</span>}
-                      </div>
-                    </td>
-                    <td className="p-3">
-                      <div className="font-bold text-slate-900 flex items-center gap-1.5">
-                        <User className="w-3.5 h-3.5 text-blue-700 shrink-0" />
-                        <span>{item.instructor}</span>
-                      </div>
-                      {item.facultyTitle && (
-                        <div className="text-[10px] text-slate-600 font-medium">
-                          {item.facultyTitle}
-                        </div>
-                      )}
+                    </div>
+                  </div>
+
+                  {/* Day, Time & Room */}
+                  <div className="p-2.5 bg-slate-50 rounded-lg border border-slate-100 text-[11px] text-slate-700 flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                    <span className="font-medium text-slate-900">
+                      {item.days.map((d) => d.slice(0, 3)).join('/')} {item.startTime} – {item.endTime}
+                    </span>
+                    <span className="flex items-center gap-1 text-slate-600">
+                      <MapPin className="w-3 h-3 text-amber-600 shrink-0" />
+                      {item.room} {item.building && `· ${item.building}`}
+                    </span>
+                  </div>
+
+                  {/* Faculty Information Box */}
+                  <div className="p-3 bg-blue-50/60 rounded-lg border border-blue-100 text-xs space-y-1.5">
+                    <div className="text-[10px] font-bold uppercase tracking-wider text-blue-900 flex items-center gap-1">
+                      <User className="w-3 h-3 text-blue-700" />
+                      Faculty Teaching This Subject:
+                    </div>
+                    <div className="font-bold text-slate-900 text-xs flex items-center justify-between">
+                      <span>{item.instructor}</span>
                       {item.instructorEmail && (
-                        <div className="text-[10px] text-blue-700 font-mono">
-                          {item.instructorEmail}
-                        </div>
+                        <a
+                          href={`mailto:${item.instructorEmail}`}
+                          className="text-blue-700 underline text-[10px] font-normal"
+                        >
+                          Email
+                        </a>
                       )}
-                      {item.consultationHours && (
-                        <div className="text-[9px] text-amber-900 mt-0.5">
-                          Consultation: {item.consultationHours}
+                    </div>
+                    {item.facultyTitle && (
+                      <div className="text-[10px] text-slate-600">
+                        {item.facultyTitle}
+                        {item.facultyDepartment && ` · ${item.facultyDepartment}`}
+                      </div>
+                    )}
+                    {item.consultationHours && (
+                      <div className="text-[10px] text-amber-900 bg-amber-50 px-2 py-0.5 rounded border border-amber-200/50">
+                        <strong>Consultation:</strong> {item.consultationHours}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+
+              <div className="p-3.5 bg-slate-100 rounded-xl text-center font-bold text-slate-900 text-xs">
+                Total Enrolled Academic Load: {total.toFixed(1)} Units ({schedule.length} Courses)
+              </div>
+            </div>
+
+            {/* Desktop Table View (Hidden on mobile < md) */}
+            <div className="hidden md:block overflow-x-auto border border-slate-200 rounded-xl">
+              <table className="w-full text-left text-xs border-collapse min-w-[850px]">
+                <thead>
+                  <tr className="bg-slate-100 border-b border-slate-200 text-slate-700 font-bold uppercase text-[10px]">
+                    <th className="p-3">Course Code</th>
+                    <th className="p-3">Course Description</th>
+                    <th className="p-3">Schedule & Room</th>
+                    <th className="p-3">Faculty / Instructor Teaching Subject</th>
+                    <th className="p-3 text-center">Units</th>
+                    <th className="p-3 text-center">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-200">
+                  {schedule.map((item) => (
+                    <tr key={item.id} className="hover:bg-slate-50 transition-colors">
+                      <td className="p-3 font-mono font-bold text-blue-900 whitespace-nowrap">
+                        {item.subjectCode}
+                      </td>
+                      <td className="p-3 font-semibold text-slate-900">
+                        <div>{item.subjectTitle}</div>
+                        <span className={`text-[9px] font-bold px-1.5 py-0.2 rounded-full border mt-1 inline-block ${getTypeBadge(item.type)}`}>
+                          {item.type}
+                        </span>
+                      </td>
+                      <td className="p-3 whitespace-nowrap">
+                        <div className="font-semibold text-slate-800">
+                          {item.days.map((d) => d.slice(0, 3)).join('/')} {item.startTime} – {item.endTime}
                         </div>
-                      )}
+                        <div className="text-[10px] text-slate-600 flex items-center gap-1 mt-0.5">
+                          <MapPin className="w-3 h-3 text-amber-600 shrink-0" />
+                          <span>{item.room}</span>
+                          {item.building && <span className="text-slate-400">· {item.building}</span>}
+                        </div>
+                      </td>
+                      <td className="p-3">
+                        <div className="font-bold text-slate-900 flex items-center gap-1.5">
+                          <User className="w-3.5 h-3.5 text-blue-700 shrink-0" />
+                          <span>{item.instructor}</span>
+                        </div>
+                        {item.facultyTitle && (
+                          <div className="text-[10px] text-slate-600 font-medium">
+                            {item.facultyTitle}
+                          </div>
+                        )}
+                        {item.instructorEmail && (
+                          <div className="text-[10px] text-blue-700 font-mono">
+                            {item.instructorEmail}
+                          </div>
+                        )}
+                        {item.consultationHours && (
+                          <div className="text-[9px] text-amber-900 mt-0.5">
+                            Consultation: {item.consultationHours}
+                          </div>
+                        )}
+                      </td>
+                      <td className="p-3 text-center font-bold text-slate-900 tabular-nums">
+                        {item.units.toFixed(1)}
+                      </td>
+                      <td className="p-3 text-center">
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border bg-emerald-50 text-emerald-800 border-emerald-200">
+                          {item.enrollmentStatus || 'Enrolled · SIS Active'}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+                <tfoot>
+                  <tr className="bg-slate-100 font-bold text-slate-900 border-t-2 border-slate-300">
+                    <td colSpan={4} className="p-3 text-right uppercase text-[10px]">
+                      Total Academic Enrolled Load:
                     </td>
-                    <td className="p-3 text-center font-bold text-slate-900 tabular-nums">
-                      {item.units.toFixed(1)}
+                    <td className="p-3 text-center text-sm font-black text-blue-950">
+                      {total.toFixed(1)}
                     </td>
-                    <td className="p-3 text-center">
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border bg-emerald-50 text-emerald-800 border-emerald-200">
-                        {item.enrollmentStatus || 'Enrolled · SIS Active'}
-                      </span>
+                    <td className="p-3 text-center text-xs text-slate-500">
+                      {schedule.length} Enrolled Courses
                     </td>
                   </tr>
-                ))}
-              </tbody>
-              <tfoot>
-                <tr className="bg-slate-100 font-bold text-slate-900 border-t-2 border-slate-300">
-                  <td colSpan={4} className="p-3 text-right uppercase text-[10px]">
-                    Total Academic Enrolled Load:
-                  </td>
-                  <td className="p-3 text-center text-sm font-black text-blue-950">
-                    {total.toFixed(1)}
-                  </td>
-                  <td className="p-3 text-center text-xs text-slate-500">
-                    {schedule.length} Enrolled Courses
-                  </td>
-                </tr>
-              </tfoot>
-            </table>
+                </tfoot>
+              </table>
+            </div>
           </div>
         )}
 

@@ -16,7 +16,11 @@ import {
   Smartphone,
   ShieldCheck,
   Award,
-  Database
+  Database,
+  Menu,
+  X,
+  ChevronRight,
+  Home
 } from 'lucide-react';
 
 interface NavbarProps {
@@ -46,6 +50,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const [showNotifDropdown, setShowNotifDropdown] = useState(false);
   const [showAccountMenu, setShowAccountMenu] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Unread notifications for current parent or all recent for admin
   const unreadCount = currentUser.role === 'parent' && currentUser.parentId
@@ -471,9 +476,387 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </div>
               )}
             </div>
+
+            {/* Mobile Menu Toggle (lg:hidden) */}
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="lg:hidden p-2 rounded-lg text-blue-100 hover:text-white hover:bg-white/10 transition-colors shrink-0"
+                aria-label="Toggle Navigation Menu"
+              >
+                {mobileMenuOpen ? (
+                  <X className="w-5 h-5 text-amber-300" />
+                ) : (
+                  <Menu className="w-5 h-5" />
+                )}
+              </button>
+            </div>
           </div>
-        </div>
+
+        {/* Mobile Navigation Drawer / Dropdown */}
+        {mobileMenuOpen && (
+          <div className="lg:hidden border-t border-blue-900/80 bg-[#081b33] px-4 py-4 space-y-3 animate-in slide-in-from-top-2 duration-150 shadow-2xl max-h-[80vh] overflow-y-auto">
+            {/* Current User Pill */}
+            <div className="p-3 bg-white/5 rounded-xl border border-white/10 flex items-center justify-between">
+              <div>
+                <div className="text-xs font-bold text-white">{currentUser.name}</div>
+                <div className="text-[11px] text-blue-200">{currentUser.email}</div>
+              </div>
+              <span className="text-[10px] font-semibold uppercase px-2 py-0.5 rounded bg-amber-400 text-slate-950">
+                {currentUser.role === 'parent' ? 'Parent' : currentUser.role === 'mis_edp' ? 'MIS/EDP' : currentUser.role}
+              </span>
+            </div>
+
+            {/* Navigation Options */}
+            <div className="text-[10px] font-bold uppercase tracking-wider text-blue-300 px-1">
+              Portal Sections
+            </div>
+            <div className="space-y-1">
+              {currentUser.role === 'parent' ? (
+                <>
+                  <button
+                    onClick={() => {
+                      setActiveView('dashboard');
+                      setMobileMenuOpen(false);
+                    }}
+                    className={`w-full text-left px-3 py-2.5 rounded-lg text-xs font-semibold flex items-center justify-between transition-colors ${
+                      activeView === 'dashboard'
+                        ? 'bg-amber-400 text-slate-950 font-bold'
+                        : 'text-blue-100 hover:bg-white/10'
+                    }`}
+                  >
+                    <span className="flex items-center gap-2">
+                      <Home className="w-4 h-4" /> Child Academic Dashboard & Schedule
+                    </span>
+                    <ChevronRight className="w-4 h-4 opacity-70" />
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setActiveView('academics');
+                      setMobileMenuOpen(false);
+                    }}
+                    className={`w-full text-left px-3 py-2.5 rounded-lg text-xs font-semibold flex items-center justify-between transition-colors ${
+                      activeView === 'academics'
+                        ? 'bg-amber-400 text-slate-950 font-bold'
+                        : 'text-blue-100 hover:bg-white/10'
+                    }`}
+                  >
+                    <span className="flex items-center gap-2">
+                      <GraduationCap className="w-4 h-4" /> Guidance Standing & Clearance
+                    </span>
+                    <ChevronRight className="w-4 h-4 opacity-70" />
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setActiveView('sms_gateway');
+                      setMobileMenuOpen(false);
+                    }}
+                    className={`w-full text-left px-3 py-2.5 rounded-lg text-xs font-semibold flex items-center justify-between transition-colors ${
+                      activeView === 'sms_gateway'
+                        ? 'bg-amber-400 text-slate-950 font-bold'
+                        : 'text-blue-100 hover:bg-white/10'
+                    }`}
+                  >
+                    <span className="flex items-center gap-2">
+                      <Smartphone className="w-4 h-4" /> SMS Notifications Log
+                    </span>
+                    <ChevronRight className="w-4 h-4 opacity-70" />
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setActiveView('events');
+                      setMobileMenuOpen(false);
+                    }}
+                    className={`w-full text-left px-3 py-2.5 rounded-lg text-xs font-semibold flex items-center justify-between transition-colors ${
+                      activeView === 'events'
+                        ? 'bg-amber-400 text-slate-950 font-bold'
+                        : 'text-blue-100 hover:bg-white/10'
+                    }`}
+                  >
+                    <span className="flex items-center gap-2">
+                      <Calendar className="w-4 h-4" /> School Events & PTA Meetings
+                    </span>
+                    <ChevronRight className="w-4 h-4 opacity-70" />
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setActiveView('iso_evaluation');
+                      setMobileMenuOpen(false);
+                    }}
+                    className={`w-full text-left px-3 py-2.5 rounded-lg text-xs font-semibold flex items-center justify-between transition-colors ${
+                      activeView === 'iso_evaluation'
+                        ? 'bg-amber-400 text-slate-950 font-bold'
+                        : 'text-blue-100 hover:bg-white/10'
+                    }`}
+                  >
+                    <span className="flex items-center gap-2">
+                      <ShieldCheck className="w-4 h-4" /> ISO 25010 Quality System
+                    </span>
+                    <ChevronRight className="w-4 h-4 opacity-70" />
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={() => {
+                      setActiveView('parents');
+                      setMobileMenuOpen(false);
+                    }}
+                    className={`w-full text-left px-3 py-2.5 rounded-lg text-xs font-semibold flex items-center justify-between transition-colors ${
+                      activeView === 'parents'
+                        ? 'bg-amber-400 text-slate-950 font-bold'
+                        : 'text-blue-100 hover:bg-white/10'
+                    }`}
+                  >
+                    <span className="flex items-center gap-2">
+                      <Database className="w-4 h-4" /> Parents Database (QF-PAR-01)
+                    </span>
+                    <ChevronRight className="w-4 h-4 opacity-70" />
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setActiveView('needs_assessment');
+                      setMobileMenuOpen(false);
+                    }}
+                    className={`w-full text-left px-3 py-2.5 rounded-lg text-xs font-semibold flex items-center justify-between transition-colors ${
+                      activeView === 'needs_assessment'
+                        ? 'bg-amber-400 text-slate-950 font-bold'
+                        : 'text-blue-100 hover:bg-white/10'
+                    }`}
+                  >
+                    <span className="flex items-center gap-2">
+                      <BarChart3 className="w-4 h-4" /> Needs Assessment (QP-PAR 02)
+                    </span>
+                    <ChevronRight className="w-4 h-4 opacity-70" />
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setActiveView('academics');
+                      setMobileMenuOpen(false);
+                    }}
+                    className={`w-full text-left px-3 py-2.5 rounded-lg text-xs font-semibold flex items-center justify-between transition-colors ${
+                      activeView === 'academics'
+                        ? 'bg-amber-400 text-slate-950 font-bold'
+                        : 'text-blue-100 hover:bg-white/10'
+                    }`}
+                  >
+                    <span className="flex items-center gap-2">
+                      <GraduationCap className="w-4 h-4" /> Guidance & MIS/EDP Console
+                    </span>
+                    <ChevronRight className="w-4 h-4 opacity-70" />
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setActiveView('sms_gateway');
+                      setMobileMenuOpen(false);
+                    }}
+                    className={`w-full text-left px-3 py-2.5 rounded-lg text-xs font-semibold flex items-center justify-between transition-colors ${
+                      activeView === 'sms_gateway'
+                        ? 'bg-amber-400 text-slate-950 font-bold'
+                        : 'text-blue-100 hover:bg-white/10'
+                    }`}
+                  >
+                    <span className="flex items-center gap-2">
+                      <Smartphone className="w-4 h-4" /> SMS Center & Broadcast
+                    </span>
+                    <ChevronRight className="w-4 h-4 opacity-70" />
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setActiveView('events');
+                      setMobileMenuOpen(false);
+                    }}
+                    className={`w-full text-left px-3 py-2.5 rounded-lg text-xs font-semibold flex items-center justify-between transition-colors ${
+                      activeView === 'events'
+                        ? 'bg-amber-400 text-slate-950 font-bold'
+                        : 'text-blue-100 hover:bg-white/10'
+                    }`}
+                  >
+                    <span className="flex items-center gap-2">
+                      <Calendar className="w-4 h-4" /> Events & Attendance
+                    </span>
+                    <ChevronRight className="w-4 h-4 opacity-70" />
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setActiveView('iso_evaluation');
+                      setMobileMenuOpen(false);
+                    }}
+                    className={`w-full text-left px-3 py-2.5 rounded-lg text-xs font-semibold flex items-center justify-between transition-colors ${
+                      activeView === 'iso_evaluation'
+                        ? 'bg-amber-400 text-slate-950 font-bold'
+                        : 'text-blue-100 hover:bg-white/10'
+                    }`}
+                  >
+                    <span className="flex items-center gap-2">
+                      <ShieldCheck className="w-4 h-4" /> ISO 25010 Evaluation
+                    </span>
+                    <ChevronRight className="w-4 h-4 opacity-70" />
+                  </button>
+                </>
+              )}
+            </div>
+
+            {/* Quick Actions in Mobile Drawer */}
+            <div className="pt-2 border-t border-white/10 space-y-2">
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onOpenIntakeModal();
+                }}
+                className="w-full py-2.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 shadow-sm"
+              >
+                <FileText className="w-4 h-4" />
+                Fill QF-PAR-01 Intake Form
+              </button>
+
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onOpenLoginModal();
+                }}
+                className="w-full py-2 bg-white/10 hover:bg-white/20 text-white font-medium text-xs rounded-xl flex items-center justify-center gap-1.5"
+              >
+                <User className="w-3.5 h-3.5" />
+                Switch Account / Sign In
+              </button>
+            </div>
+          </div>
+        )}
       </div>
+
+      {/* Mobile Bottom Navigation Bar (Visible on smartphones & tablets < lg) */}
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#0b2545]/95 backdrop-blur-md border-t border-blue-900/60 shadow-lg px-2 py-1.5 flex items-center justify-around text-[10px]">
+        {currentUser.role === 'parent' ? (
+          <>
+            <button
+              onClick={() => {
+                setActiveView('dashboard');
+                setMobileMenuOpen(false);
+              }}
+              className={`flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-lg transition-colors ${
+                activeView === 'dashboard' ? 'text-amber-300 font-bold' : 'text-blue-200 hover:text-white'
+              }`}
+            >
+              <Home className="w-4 h-4" />
+              <span>Schedule</span>
+            </button>
+            <button
+              onClick={() => {
+                setActiveView('academics');
+                setMobileMenuOpen(false);
+              }}
+              className={`flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-lg transition-colors ${
+                activeView === 'academics' ? 'text-amber-300 font-bold' : 'text-blue-200 hover:text-white'
+              }`}
+            >
+              <GraduationCap className="w-4 h-4" />
+              <span>Guidance</span>
+            </button>
+            <button
+              onClick={() => {
+                setActiveView('sms_gateway');
+                setMobileMenuOpen(false);
+              }}
+              className={`flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-lg transition-colors ${
+                activeView === 'sms_gateway' ? 'text-amber-300 font-bold' : 'text-blue-200 hover:text-white'
+              }`}
+            >
+              <Smartphone className="w-4 h-4" />
+              <span>SMS</span>
+            </button>
+            <button
+              onClick={() => {
+                setActiveView('events');
+                setMobileMenuOpen(false);
+              }}
+              className={`flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-lg transition-colors ${
+                activeView === 'events' ? 'text-amber-300 font-bold' : 'text-blue-200 hover:text-white'
+              }`}
+            >
+              <Calendar className="w-4 h-4" />
+              <span>Events</span>
+            </button>
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className={`flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-lg transition-colors ${
+                mobileMenuOpen ? 'text-amber-300 font-bold' : 'text-blue-200 hover:text-white'
+              }`}
+            >
+              <Menu className="w-4 h-4" />
+              <span>More</span>
+            </button>
+          </>
+        ) : (
+          <>
+            <button
+              onClick={() => {
+                setActiveView('parents');
+                setMobileMenuOpen(false);
+              }}
+              className={`flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-lg transition-colors ${
+                activeView === 'parents' ? 'text-amber-300 font-bold' : 'text-blue-200 hover:text-white'
+              }`}
+            >
+              <Database className="w-4 h-4" />
+              <span>Database</span>
+            </button>
+            <button
+              onClick={() => {
+                setActiveView('academics');
+                setMobileMenuOpen(false);
+              }}
+              className={`flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-lg transition-colors ${
+                activeView === 'academics' ? 'text-amber-300 font-bold' : 'text-blue-200 hover:text-white'
+              }`}
+            >
+              <GraduationCap className="w-4 h-4" />
+              <span>Guidance</span>
+            </button>
+            <button
+              onClick={() => {
+                setActiveView('sms_gateway');
+                setMobileMenuOpen(false);
+              }}
+              className={`flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-lg transition-colors ${
+                activeView === 'sms_gateway' ? 'text-amber-300 font-bold' : 'text-blue-200 hover:text-white'
+              }`}
+            >
+              <Smartphone className="w-4 h-4" />
+              <span>SMS</span>
+            </button>
+            <button
+              onClick={() => {
+                setActiveView('events');
+                setMobileMenuOpen(false);
+              }}
+              className={`flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-lg transition-colors ${
+                activeView === 'events' ? 'text-amber-300 font-bold' : 'text-blue-200 hover:text-white'
+              }`}
+            >
+              <Calendar className="w-4 h-4" />
+              <span>Events</span>
+            </button>
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className={`flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-lg transition-colors ${
+                mobileMenuOpen ? 'text-amber-300 font-bold' : 'text-blue-200 hover:text-white'
+              }`}
+            >
+              <Menu className="w-4 h-4" />
+              <span>More</span>
+            </button>
+          </>
+        )}
+      </nav>
     </header>
   );
 };

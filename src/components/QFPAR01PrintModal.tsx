@@ -69,9 +69,10 @@ export const QFPAR01PrintModal: React.FC<QFPAR01PrintModalProps> = ({
         </div>
 
         {/* Official Document Body */}
-        <div className="p-8 sm:p-10 bg-white text-slate-900 font-sans text-xs leading-normal print:p-0">
-          {/* Header Table matching QF-PAR-01 */}
-          <div className="border-2 border-slate-900 mb-4">
+        <div className="p-4 sm:p-10 bg-white text-slate-900 font-sans text-xs leading-normal print:p-0 overflow-x-auto">
+          <div className="min-w-[650px] print:min-w-0">
+            {/* Header Table matching QF-PAR-01 */}
+            <div className="border-2 border-slate-900 mb-4">
             <div className="grid grid-cols-12 divide-x-2 divide-slate-900">
               {/* Left Logo & University Title */}
               <div className="col-span-8 p-3 flex items-center gap-3">
@@ -523,6 +524,7 @@ export const QFPAR01PrintModal: React.FC<QFPAR01PrintModalProps> = ({
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 };

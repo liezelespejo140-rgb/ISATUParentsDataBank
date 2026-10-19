@@ -148,7 +148,7 @@ export const SchedulePrintModal: React.FC<SchedulePrintModalProps> = ({
 
           {/* Enrolled Courses Schedule Table */}
           <div className="overflow-x-auto border border-slate-300 rounded-lg">
-            <table className="w-full text-left text-xs border-collapse">
+            <table className="w-full text-left text-xs border-collapse min-w-[720px] print:min-w-0">
               <thead>
                 <tr className="bg-slate-100 text-slate-700 border-b border-slate-300 uppercase text-[10px] font-bold">
                   <th className="py-2.5 px-3">Subject Code</th>
