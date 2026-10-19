@@ -1,31 +1,29 @@
-name: Android CI
+name: Build and Check
 
 on:
   push:
-    branches: [ "main", "master" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main", "master" ]
+    branches: [ main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v5
+      # 1. Add this step first to check out your repository files
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: gradle
+      # 2. Followed by your Java/Gradle setup
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17' # Adjust to your project version
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew || true
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
 
-    - name: Run Unit Tests
-      run: ./gradlew testDebugUnitTest
-
-    - name: Build Debug APK
-      run: ./gradlew assembleDebug
+      # 3. Your build or test command
+      - name: Run build
+        run: ./gradlew build
